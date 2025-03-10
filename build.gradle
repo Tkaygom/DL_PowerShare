@@ -1,13 +1,19 @@
 // Root build.gradle
+
+
+
 buildscript {
+
+    ext.kotlin_version = '1.9.22' // Update to latest stable
+
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0' // Use the latest stable version
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20' // Add if using Kotlin
-
+        classpath 'com.android.tools.build:gradle:8.3.0' // Use the latest stable version
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22' // Add if using Kotlin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 

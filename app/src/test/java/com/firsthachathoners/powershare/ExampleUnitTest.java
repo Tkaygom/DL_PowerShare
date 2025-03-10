@@ -16,9 +16,3 @@ public class ExampleUnitTest {
     }
 }
 
-dependencies {
-    // ... other dependencies
-
-    // Unit tests
-    testImplementation 'junit:junit:4.13.2'
-}

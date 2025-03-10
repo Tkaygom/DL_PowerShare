@@ -1,26 +1,219 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.firsthachathoners.powershare.MapsActivity">
+    tools:context=".MapActivity">
 
-    <EditText
-        android:id="@+id/rng"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:hint="Range(km)"
-        android:inputType="numberDecimal" />
+    <!-- Main Content Container -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/setRange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:text="submit"
-        android:onClick="setR"/>
+        <!-- Map Fragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-</fragment>
+        <EditText
+            android:id="@+id/rng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Hamburger Menu (Top Left) -->
+        <ImageButton
+            android:id="@+id/btnMenu"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/circular_background"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_menu" />
+
+        <!-- Help Button (Bottom Left) -->
+        <ImageButton
+            android:id="@+id/btnHelp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/circular_background"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_help" />
+
+        <!-- Scan a Station Button (Bottom Center) -->
+        <Button
+            android:id="@+id/btnScanStation"
+            android:layout_width="wrap_content"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:backgroundTint="#FF0048"
+            android:text="Scan a station"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <!-- Location Button (Bottom Right) -->
+        <ImageButton
+            android:id="@+id/btnLocation"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/circular_background"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_location" />
+
+    </RelativeLayout>
+
+    <!-- Navigation Drawer -->
+    <!-- Have a Look At the android:Layout_width set it to good width this is so far good to the eyes -->
+    <LinearLayout
+        android:id="@+id/nav_view"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:elevation="16dp">
+
+        <!-- Desert Lion Technology Logo -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:src="@drawable/your_logo"
+            android:layout_gravity="center_horizontal"
+            android:padding="6dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <!-- Menu Buttons -->
+                <Button
+                    android:id="@+id/myAccountButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="My Account"
+                    style="@style/MenuItemStyle"/>
+
+
+                <!-- Menu Buttons -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="History"
+                    style="@style/MenuItemStyle"/>
+
+                <!-- Menu Buttons -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="How To"
+                    style="@style/MenuItemStyle"/>
+
+                <!-- Menu Buttons -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enter Promo Code"
+                    style="@style/MenuItemStyle"/>
+
+                <!-- Menu Buttons -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Invite a friend"
+                    style="@style/MenuItemStyle"/>
+
+                <!-- Legal Section -->
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Legal"
+                        android:textSize="14sp"/>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="false"/>
+                </LinearLayout>
+
+                <!-- Partner Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Partner with us"
+                        android:textSize="14sp"/>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="false"/>
+                </LinearLayout>
+
+                <!-- Contact Button -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contact us"
+                    style="@style/MenuItemStyle"
+                    android:layout_marginTop="16dp"/>
+
+                <!-- Version Info -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Power Share v.1.1\nMade in Ghana"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#666666"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

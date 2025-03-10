@@ -22,10 +22,10 @@ public class APIClient {
 
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://power-share-hackathon.herokuapp.com/")
+                .baseUrl("http://192.168.2.10:5000/") // Use the correct IP and port of your backend server
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
-                .build();
+               .build();
 
         return retrofit;
     }

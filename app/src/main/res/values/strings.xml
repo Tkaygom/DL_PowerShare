@@ -2,6 +2,10 @@
     <string name="app_name">PowerShare</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_login">Login</string>
+    <string name="submit">Submit</string>
+
+        <!-- Add other existing strings here -->
+        <string name="title_activity_user_info">User Information</string>
 
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
@@ -16,4 +20,6 @@
         completions."
     </string>
     <string name="directionsApiKey">AIzaSyCWCFjWIuTBC8yxyhpXqLL7d3PkPNfXQyk</string>
+    <string name="range_hint">Range(km)</string>
+    <string name="submit_button">Submit</string>
 </resources>

@@ -1,39 +1,25 @@
 package com.firsthachathoners.powershare;
 
-
-import java.time.Instant;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
-import android.os.Looper;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentActivity; //old import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat; //old import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -42,7 +28,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,63 +42,106 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
 
-import org.joda.time.DateTime;
-
-import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import androidx.core.view.GravityCompat;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.firsthachathoners.powershare.HelpBottomSheetFragment;
 
-// Maps components
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class MapsActivity extends AppCompatActivity implements
-        OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener {
 
-    public static final String EXTRA_MESSAGE = "com.firsthachathoners.powershare.MESSAGE";
-    private  UiSettings uiSettings;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
+    // Map components
     private GoogleMap mMap;
+    private UiSettings uiSettings;
     private LocationRequest mLocationRequest;
+    private FusedLocationProviderClient fusedLocationClient;
 
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 4000; /* 4 sec */
-    static int REQUEST_FINE_LOCATION = 0, zoomMX = 1;
-    Example userInfo;
-    private String uName;
-    public LatLng myLoc, destPost;
+    // Location tracking
+    private static final int REQUEST_FINE_LOCATION = 1;
+    private long UPDATE_INTERVAL = 10000;
+    private long FASTEST_INTERVAL = 4000;
+    private LatLng myLoc, destPost;
     private Marker marker;
     private Marker destMarker;
-    private HTTPInterface httpInterface;
-    private boolean isStationFound = false, isPathSet = false, isDestSet = false, isSesSt = false;
-    private TextView rangeTxt;
-    Polyline paths;
-    Marker []sMarker;
 
+    // UI components
+    private DrawerLayout drawerLayout;
+    private EditText rangeTxt;
+    private Polyline paths;
+    private Marker[] sMarker;
+    private Button myAccountButton;
+
+    // State flags
+    private boolean isStationFound = false;
+    private boolean isPathSet = false;
+    private boolean isDestSet = false;
+
+    // API clients
+    private HTTPInterface httpInterface;
+    private int zoomMX = 1;
     public List<Result> stations;
 
-    private DirectionsApiRequest dAR;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
 
-    //GeoApiContext Initialization Fix
-    //Update the getGeoContext() method:
+        // Initialize UI components
+        drawerLayout = findViewById(R.id.drawer_layout);
+        rangeTxt = findViewById(R.id.rng);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        myAccountButton = findViewById(R.id.myAccountButton);
+
+        // Setup map fragment
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        // Setup menu button
+        ImageButton btnMenu = findViewById(R.id.btnMenu);
+        btnMenu.setOnClickListener(v -> {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        // Account button click listener
+        myAccountButton.setOnClickListener(v -> {
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+
+            if (isLoggedIn) {
+                startActivity(new Intent(MapsActivity.this, AccountActivity.class));
+            } else {
+                showReminderDialog();
+            }
+        });
+
+        // Check location permissions
+        if (checkPermissions()) {
+            startLocationUpdates();
+        } else {
+            requestPermissions();
+        }
+    }
 
     private GeoApiContext getGeoContext() {
         return new GeoApiContext.Builder()
@@ -125,247 +153,139 @@ public class MapsActivity extends AppCompatActivity implements
                 .build();
     }
 
-    public DirectionsResult prepareRequest(LatLng dest) throws InterruptedException, ApiException, IOException {
-        if (dest == null)
-            return null;
+    private String getEndLocationTitle(DirectionsResult results) {
+        return "Time: " + results.routes[0].legs[0].duration.humanReadable +
+                " Distance: " + results.routes[0].legs[0].distance.humanReadable;
+    }
+
+    private DirectionsResult prepareRequest(LatLng dest) throws Exception {
+        if (dest == null) return null;
 
         Instant now = Instant.now();
-        dAR = DirectionsApi.newRequest(getGeoContext())
+        return DirectionsApi.newRequest(getGeoContext())
                 .mode(TravelMode.WALKING)
-                .origin(Double.toString(myLoc.latitude) + "," + Double.toString(myLoc.longitude))
-                .destination(Double.toString(dest.latitude) + "," + Double.toString(dest.longitude))
-                .departureTime(now);  // Set departure time here
-
-        return dAR.await();
-    }
-
-    private String getEndLocationTitle(DirectionsResult results){
-        return  "Time :"+ results.routes[0].legs[0].duration.humanReadable +
-                " Distance :" + results.routes[0].legs[0].distance.humanReadable;
-    }
-
-    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        paths = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
-    }
-
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_maps, container, false);
-        rangeTxt = (EditText) view.findViewById(R.id.rng);
-        return view;
+                .origin(myLoc.latitude + "," + myLoc.longitude)
+                .destination(dest.latitude + "," + dest.longitude)
+                .departureTime(now)
+                .await();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        userInfo = (Example) intent.getSerializableExtra(EXTRA_MESSAGE);
-
-        userInfo.printInfo();
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        startLocationUpdates();
+    public boolean onMarkerClick(Marker marker) {
+        if (!marker.equals(this.marker)) {
+            popAlertDialog(marker);
+        }
+        return true;
     }
 
-    // Trigger new location updates at interval
     @SuppressLint("MissingPermission")
-    protected void startLocationUpdates() {
-
-        // Create the location request to start receiving updates
+    private void startLocationUpdates() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        // Create LocationSettingsRequest object using location request
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         LocationSettingsRequest locationSettingsRequest = builder.build();
 
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+        fusedLocationClient.requestLocationUpdates(mLocationRequest,
+                new LocationCallback() {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
-                        onLocationChanged(locationResult.getLastLocation());
+                        if (locationResult != null) {
+                            onLocationChanged(locationResult.getLastLocation());
+                        }
                     }
                 },
-                Looper.myLooper());
+                getMainLooper());
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
+        uiSettings = mMap.getUiSettings();
+
+        if (checkPermissions()) {
+            enableLocationFeatures();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void enableLocationFeatures() {
+        mMap.setMyLocationEnabled(true);
+        uiSettings.setMyLocationButtonEnabled(true);
+        getLastLocation();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        onLocationChanged(location);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("MapsActivity", "Error getting location", e));
     }
 
     public void onLocationChanged(Location location) {
-        // New location has now been determined
-        String msg = "Updated Location: " +
-                Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
-        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        // You can now create a LatLng Object for use with maps
-
         myLoc = new LatLng(location.getLatitude(), location.getLongitude());
-        marker.remove();
+
+        if (marker != null) marker.remove();
+
         marker = mMap.addMarker(new MarkerOptions()
-                .icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
-                .title("Current Location").position(myLoc)
-                .snippet("Thinking of finding POWERBANK <3 ..."));
+                .position(myLoc)
+                .title("Current Location")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                .snippet("Searching for power banks..."));
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 16.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 16f));
+        updateStationMarkers();
+    }
 
+    private void updateStationMarkers() {
         httpInterface = APIClient.getClient().create(HTTPInterface.class);
+        Call<JSONData> call = httpInterface.getAllRecords(myLoc.longitude, myLoc.latitude, zoomMX * 1000);
 
-        System.out.println(zoomMX);
-        setR(rangeTxt);
-        Call<JSONData> newCall = httpInterface.getAllRecords(myLoc.longitude, myLoc.latitude, zoomMX * 1000);
-        Call<JSONData> sesCall = httpInterface.getPSs(myLoc.longitude, myLoc.latitude, zoomMX * 1000);
-
-        if ( !isSesSt ) {
-            newCall.enqueue(new Callback<JSONData>() {
-                @Override
-                public void onResponse(Call<JSONData> call, Response<JSONData> response) {
-                    DirectionsResult res;
+        call.enqueue(new Callback<JSONData>() {
+            @Override
+            public void onResponse(Call<JSONData> call, Response<JSONData> response) {
+                if (response.isSuccessful() && response.body() != null) {
                     stations = response.body().getResult();
-                    if (!isStationFound && stations.size() > 0) {
+                    if (!isStationFound && !stations.isEmpty()) {
                         fillMapWithStations(stations);
                     }
-                    if (!isPathSet) {
-                        try {
-                            if (isDestSet) {
-                                res = prepareRequest(destPost);
-
-                                addMarkersToMap(res, mMap);
-
-                                addPolyline(res, mMap);
-                                isPathSet = true;
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ApiException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        if (isReachedDest()) {
-                            popAlertDialogIsReached();
-                        }
-                    }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<JSONData> call, Throwable t) {
-
-                }
-            });
-        }else{
-            sesCall.enqueue(new Callback<JSONData>() {
-                @Override
-                public void onResponse(Call<JSONData> call, Response<JSONData> response) {
-                    DirectionsResult res;
-                    stations = response.body().getResult();
-                    if (!isStationFound && stations.size() > 0) {
-                        fillMapWithStations(stations);
-                    }
-                    if (!isPathSet) {
-                        try {
-                            if (isDestSet) {
-                                res = prepareRequest(destPost);
-
-                                addMarkersToMap(res, mMap);
-
-                                addPolyline(res, mMap);
-                                isPathSet = true;
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ApiException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        if (isReachedDest()) {
-                            popAlertDialogIsReached();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JSONData> call, Throwable t) {
-
-                }
-            });
-
-        }
-    }
-
-    public void setR( View view ){
-        try {
-            zoomMX = Integer.parseInt(rangeTxt.getText().toString());
-        }catch (NullPointerException e){
-            System.out.println("EXCEPTION");
-            zoomMX = 1;
-        }
-    }
-
-    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
-        destMarker = mMap.addMarker(new MarkerOptions().position( destPost ).
-                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
+            @Override
+            public void onFailure(Call<JSONData> call, Throwable t) {
+                Log.e("MapsActivity", "API call failed", t);
+            }
+        });
     }
 
     private void fillMapWithStations(List<Result> stations) {
         sMarker = new Marker[stations.size()];
-        Result temp;
-        for ( int i = 0; i < stations.size(); i++ ){
-            temp = stations.get(i);
-            sMarker[i] = mMap.addMarker( new MarkerOptions().
-                    position(new LatLng(temp.getLocation().get(1), temp.getLocation().get(0))).title(temp.getName()).
-                    icon( BitmapDescriptorFactory.fromResource(R.drawable.ic_power_settings_new_black_24dp)) );
+        for (int i = 0; i < stations.size(); i++) {
+            Result station = stations.get(i);
+            LatLng position = new LatLng(station.getLocation().get(1), station.getLocation().get(0));
+            sMarker[i] = mMap.addMarker(new MarkerOptions()
+                    .position(position)
+                    .title(station.getName())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_power_settings_new_black_24dp)));
         }
         isStationFound = true;
     }
 
-    @SuppressLint("MissingPermission")
-    public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)//note updated by tkay
-        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        locationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // GPS location can be null if GPS is switched off
-                        if (location != null) {
-                            onLocationChanged(location);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
-                        e.printStackTrace();
-                    }
-                });
-    }
-
     private boolean checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            requestPermissions();
-            return false;
-        }
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermissions() {
@@ -374,107 +294,128 @@ public class MapsActivity extends AppCompatActivity implements
                 REQUEST_FINE_LOCATION);
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
-        // Add a marker in Sydney and move the camera
-        if(checkPermissions()) {
-            googleMap.setMyLocationEnabled(true);
+    public void setR(View view) {
+        try {
+            String input = rangeTxt.getText().toString().trim();
+            zoomMX = input.isEmpty() ? 1 : Integer.parseInt(input);
+            rangeTxt.setText(String.valueOf(zoomMX));
+        } catch (NumberFormatException e) {
+            zoomMX = 1;
+            rangeTxt.setText(String.valueOf(zoomMX));
+            e.printStackTrace();
         }
-        uiSettings = mMap.getUiSettings();
-        uiSettings.setMapToolbarEnabled(true);
-        myLoc = new LatLng(-34, 151);
-        marker = mMap.addMarker( new MarkerOptions().position(myLoc).title("Initial position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
-
     }
 
-    public boolean isReachedDest(){
-        float[] gap = new float[1];
-        Location.distanceBetween( myLoc.latitude, myLoc.longitude, destPost.latitude, destPost.longitude, gap);
-        if ( gap[0] < 150 ){
-            return true;
+    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        if (results != null && results.routes.length > 0) {
+            List<LatLng> decodedPath = PolyUtil.decode(
+                    results.routes[0].overviewPolyline.getEncodedPath()
+            );
+            if (paths != null) paths.remove();
+            paths = mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
         }
-        return false;
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        popAlertDialog(marker);
-        return true;
+    public boolean isReachedDest() {
+        if (myLoc == null || destPost == null) return false;
+
+        float[] results = new float[1];
+        Location.distanceBetween(
+                myLoc.latitude, myLoc.longitude,
+                destPost.latitude, destPost.longitude,
+                results
+        );
+        return results[0] < 150;
     }
 
-    public void popAlertDialogIsReached( ){
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(MapsActivity.this);
-
-        }
-        builder.setTitle("Have you reached your destination? " )
-                .setMessage("Will you leave powerbank?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        destMarker.remove();
-                        isPathSet = false;
-                        destPost = null;
-                        isDestSet = false;
-                        isSesSt = false;
-                        paths.remove();
-                    }
+    public void popAlertDialogIsReached() {
+        new AlertDialog.Builder(this)
+                .setTitle("Destination Reached")
+                .setMessage("Have you returned the power bank?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    if (paths != null) paths.remove();
+                    if (destMarker != null) destMarker.remove();
+                    isDestSet = false;
+                    isPathSet = false;
+                    destPost = null;
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setNegativeButton("No", null)
                 .show();
     }
 
-    public void popAlertDialog(final Marker tapMarker){
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(MapsActivity.this);
-        }
-        if (  !(tapMarker.getPosition().equals(this.marker.getPosition()) || ( this.destMarker != null &&
-                tapMarker.getPosition().equals(this.destMarker.getPosition())) ) ) {
-            builder.setTitle("Path to: " + tapMarker.getTitle())
-                    .setMessage("Do you want to go this station?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (paths != null)
-                                paths.remove();
-                            if (destMarker != null)
-                                destMarker.remove();
-                            destPost = new LatLng(tapMarker.getPosition().latitude, tapMarker.getPosition().longitude);
-                            isPathSet = false;
-                            isDestSet = true;
-                            isSesSt = true;
+    public void popAlertDialog(final Marker tapMarker) {
+        if (tapMarker.equals(marker) || (destMarker != null && tapMarker.equals(destMarker))) return;
+
+        new AlertDialog.Builder(this)
+                .setTitle("Navigate to station")
+                .setMessage("Get directions to this station?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    if (paths != null) paths.remove();
+                    if (destMarker != null) destMarker.remove();
+
+                    destPost = tapMarker.getPosition();
+                    isDestSet = true;
+                    isPathSet = false;
+
+                    new Thread(() -> {
+                        try {
+                            DirectionsResult results = prepareRequest(destPost);
+                            runOnUiThread(() -> {
+                                addPolyline(results, mMap);
+                                destMarker = mMap.addMarker(new MarkerOptions()
+                                        .position(destPost)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_ORANGE))
+                                        .title("Destination")
+                                        .snippet(getEndLocationTitle(results)));
+                            });
+                        } catch (Exception e) {
+                            runOnUiThread(() -> Log.e("Directions", "Error getting directions", e));
                         }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            return;
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+                    }).start();
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_FINE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates();
+            }
         }
     }
+
+
+    public class MapActivity extends AppCompatActivity {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_maps); // Verify this XML exists
+
+            ImageButton btnHelp = findViewById(R.id.btnHelp);
+            btnHelp.setOnClickListener(v -> {
+                new HelpBottomSheetFragment().show(getSupportFragmentManager(), "HELP_SHEET_TAG");
+            });
+        }
+    }
+
+
+    private void showReminderDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Login Required")
+                .setMessage("You need to login to access this feature")
+                .setPositiveButton("Login", (dialog, which) -> {
+                    // Start login activity
+                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
 }
+
+
