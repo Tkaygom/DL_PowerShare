@@ -127,13 +127,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         myAccountButton.setOnClickListener(v -> {
             SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
             boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+            String storedUsername = prefs.getString("username", null); // Get saved username
 
-            if (isLoggedIn) {
-                startActivity(new Intent(MapsActivity.this, AccountActivity.class));
+            if (isLoggedIn && storedUsername != null) {
+                // User is logged in, open AccountActivity
+                Intent intent = new Intent(MapsActivity.this, AccountActivity.class);
+                intent.putExtra("USERNAME", storedUsername);
+                intent.putExtra("CREDIT_SESSION", prefs.getString("CREDIT_SESSION", "No Credit Info"));
+                startActivity(intent);
             } else {
+                // Show login reminder if user is not logged in
                 showReminderDialog();
             }
         });
+
+
+
+
 
         // Check location permissions
         if (checkPermissions()) {
