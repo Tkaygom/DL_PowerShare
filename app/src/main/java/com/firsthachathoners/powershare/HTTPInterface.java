@@ -15,6 +15,15 @@ import retrofit2.http.Query;
  */
 
 public interface HTTPInterface {
+
+
+
+    @FormUrlEncoded
+    @POST("/user/login")  // Adjust the endpoint based on your API
+    Call<UserResponse> login(@Field("username") String username, @Field("password") String password);
+
+
+
     @GET("api/user/details")
     Call<UserResponse> getUserDetails(@Query("username") String username);
 

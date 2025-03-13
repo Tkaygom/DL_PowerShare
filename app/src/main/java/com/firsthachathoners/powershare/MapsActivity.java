@@ -63,7 +63,6 @@ import com.firsthachathoners.powershare.HelpBottomSheetFragment;
 
 
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     // Map components
@@ -97,6 +96,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int zoomMX = 1;
     public List<Result> stations;
 
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh login state (optional, as your onClick checks prefs every time)
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -420,12 +426,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setTitle("Login Required")
                 .setMessage("You need to login to access this feature")
                 .setPositiveButton("Login", (dialog, which) -> {
-                    // Start login activity
+                    Log.d("MapsActivity", "Login button clicked, launching LoginActivity...");
                     startActivity(new Intent(MapsActivity.this, LoginActivity.class));
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 }
-
 

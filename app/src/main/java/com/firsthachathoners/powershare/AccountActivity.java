@@ -8,7 +8,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AccountActivity extends AppCompatActivity {
-
+    public static final String PREFS_NAME = "UserPrefs";
+    public static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    public static final String KEY_USERNAME = "username";
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -28,7 +30,7 @@ public class AccountActivity extends AppCompatActivity {
         creditTextView.setText("Credit Session: " + (creditSession != null ? creditSession : "N/A"));
 
         // Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE); // Match MapsActivity
 
         Button logoutButton = findViewById(R.id.btn_logout);
         Button backButton = findViewById(R.id.btn_back);
@@ -36,7 +38,7 @@ public class AccountActivity extends AppCompatActivity {
         // Logout action
         logoutButton.setOnClickListener(view -> {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isLoggedIn", false);
+            editor.clear(); // Removes all keys (isLoggedIn, username, etc.)
             editor.apply();
 
             Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
@@ -47,10 +49,8 @@ public class AccountActivity extends AppCompatActivity {
 
         // Back action to MapsActivity
         backButton.setOnClickListener(view -> {
-            Intent intent = new Intent(AccountActivity.this, MapsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish(); // Close current activity
-        });
+            finish();
+        }); // Simpler if MapsActivity is the parent
+
+        };
     }
-}
