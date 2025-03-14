@@ -11,23 +11,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class APIClient {
-
+    private static final String BASE_URL = "http://192.168.2.10:5001/"; // Use port 5001
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {
+        if (retrofit == null) {
+            // Create HTTP client with interceptor
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+            // Add logging interceptor (debug only)
+            if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                httpClient.addInterceptor(logging);
+            }
 
+            // Add timeouts
+            httpClient
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS);
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.10:5000/") // Use the correct IP and port of your backend server
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-               .build();
-
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(httpClient.build())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
         return retrofit;
     }
-
-}
+}}

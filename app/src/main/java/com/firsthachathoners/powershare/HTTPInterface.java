@@ -1,48 +1,38 @@
 package com.firsthachathoners.powershare;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.POST;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
-
 
 /**
  * Created by safa on 17.02.2018.
+ * edited by Kofitkay on 14th of March 2025
  */
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface HTTPInterface {
 
+    // Authentication endpoints
+    @POST("user/login")
+    Call<UserResponse> login(@Body LoginRequest loginRequest);
 
+    @POST("user/register")
+    Call<Void> register(@Body RegistrationRequest registrationRequest);
 
-    @FormUrlEncoded
-    @POST("/user/login")  // Adjust the endpoint based on your API
-    Call<UserResponse> login(@Field("username") String username, @Field("password") String password);
-
-
-
-    @GET("api/user/details")
+    // User endpoints
+    @GET("user/details")
     Call<UserResponse> getUserDetails(@Query("username") String username);
 
-    @FormUrlEncoded
-    @POST("/find/powerbank")
-    Call<JSONData> getAllRecords(@Field("longitude") double longitude, @Field("latitude") double latitude, @Field("range") int range);
+    // Station endpoints
+    @POST("find/powerbank")
+    Call<JSONData> getAllRecords(@Body LocationRequest locationRequest);
 
-    @FormUrlEncoded
-    @POST("/find/chargeport")
-    Call<JSONData> getPSs(@Field("longitude") double longitude, @Field("latitude") double latitude, @Field("range") int range);
+    @POST("find/chargeport")
+    Call<JSONData> getPSs(@Body LocationRequest locationRequest);
 
-
-//Look at this later
-   // @FormUrlEncoded
-   // @POST("/user/info")
-   // Call<Example> getUserDetails(@Field("username") String usName);
-
-    @FormUrlEncoded
-    @POST("/user/sessionChange")
-    Call<SesObject> sessionChange(@Field("username") String usName, @Field("changedTo") boolean changedTo,
-                         @Field("psName") String psName);
+    // Session management
+    @POST("user/sessionChange")
+    Call<SesObject> updateSession(@Body SessionUpdateRequest sessionUpdate);
 }
