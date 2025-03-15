@@ -1,123 +1,64 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'  // Kotlin plugin
+    id 'org.jetbrains.kotlin.android'
 }
-
 
 android {
     namespace "com.firsthachathoners.powershare"
     compileSdk 34
 
-
-
-
     defaultConfig {
         applicationId "com.firsthachathoners.powershare"
-        defaultConfig {
-            minSdk = 21
-
-        }
-        targetSdk 34  // Already correct, but verify latest is 34
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
-
-    buildFeatures {
-        viewBinding true // Enable if using view binding
-    }
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
-        // Add manifest placeholders for Google Maps
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
         manifestPlaceholders = [googleMapsKey: "@string/google_maps_key"]
     }
 
-    compileOptions {
+    buildFeatures {
+        viewBinding true
+    }
 
+    compileOptions {
         coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '17' // Requires Kotlin 1.9.0+
+        jvmTarget = '17'
     }
 }
 
 dependencies {
-
-
-
-
-    testImplementation 'junit:junit:4.13.2'
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4' // Update desugaring
-
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-    implementation 'com.google.maps:google-maps-services:2.2.0'
-    implementation 'org.slf4j:slf4j-simple:1.7.25'
-
-        implementation 'com.google.android.gms:play-services-maps:18.2.0'
-        implementation 'com.google.android.gms:play-services-location:21.2.0'
-
-
-    implementation 'androidx.appcompat:appcompat:1.6.1' // AppCompat
-    implementation 'androidx.core:core-ktx:1.12.0'// Compatible with SDK 34
-    implementation 'androidx.core:core:1.12.0'       // Compatible with SDK 34
-    implementation 'com.google.maps.android:android-maps-utils:2.0.4'
-
-
-
-    // AndroidX Core
-
-
+    // Core Android
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
-
-
-    // Material Design
     implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.activity:activity-ktx:1.8.0'
 
-
-    // Retrofit & OkHttp
+    // Retrofit & Networking
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
-    // GSON
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-
-    // Google Maps Services
-    implementation 'com.google.maps:google-maps-services:2.2.0'
-    implementation 'org.slf4j:slf4j-simple:2.0.7'
-
-
-    // AndroidX Migration
-
-
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
-    implementation 'androidx.core:core-splashscreen:1.0.0'
-
+    // Google Maps & Location
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.maps.android:android-maps-utils:3.4.0'
-    // Joda Time
-    implementation 'joda-time:joda-time:2.12.5'
 
-    // GSON
-    implementation 'com.google.code.gson:gson:2.10.1'
+    // Java 8+ Desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
-    // Google Maps Services
+    // Google Maps Services (for DirectionsApi, GeoApiContext, etc.)
     implementation 'com.google.maps:google-maps-services:2.2.0'
     implementation 'org.slf4j:slf4j-simple:2.0.7'
 
-    // Play Services
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'com.google.android.gms:play-services-maps:18.2.0'
-
-    // Java 8+ API desugaring
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
-
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
 }

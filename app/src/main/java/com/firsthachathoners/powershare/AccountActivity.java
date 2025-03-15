@@ -52,5 +52,5 @@ public class AccountActivity extends AppCompatActivity {
             finish();
         }); // Simpler if MapsActivity is the parent
 
-        };
+        }
     }

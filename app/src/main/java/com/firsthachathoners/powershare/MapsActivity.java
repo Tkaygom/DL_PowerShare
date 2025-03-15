@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import com.google.android.gms.location.LocationRequest;
+
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,7 +26,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
+//import com.firsthachathoners.powershare.LocationRequest; // Custom class
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -266,7 +269,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateStationMarkers() {
         httpInterface = APIClient.getClient().create(HTTPInterface.class);
-        Call<JSONData> call = httpInterface.getAllRecords(myLoc.longitude, myLoc.latitude, zoomMX * 1000);
+
+        ApiLocationRequest request = new ApiLocationRequest();
+        request.longitude = myLoc.longitude;
+        request.latitude = myLoc.latitude;
+        request.range = zoomMX * 1000;
+
+        Call<JSONData> call = httpInterface.getAllRecords(request);
 
         call.enqueue(new Callback<JSONData>() {
             @Override

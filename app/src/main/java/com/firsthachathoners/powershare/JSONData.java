@@ -57,4 +57,4 @@ public class JSONData {
                 "result=" + result +
                 '}';
     }
-}}
+}

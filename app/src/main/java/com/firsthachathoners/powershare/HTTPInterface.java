@@ -18,6 +18,7 @@ public interface HTTPInterface {
     @POST("user/login")
     Call<UserResponse> login(@Body LoginRequest loginRequest);
 
+    // New registration endpoint
     @POST("user/register")
     Call<Void> register(@Body RegistrationRequest registrationRequest);
 
@@ -27,7 +28,7 @@ public interface HTTPInterface {
 
     // Station endpoints
     @POST("find/powerbank")
-    Call<JSONData> getAllRecords(@Body LocationRequest locationRequest);
+    Call<JSONData> getAllRecords(@Body ApiLocationRequest locationRequest);
 
     @POST("find/chargeport")
     Call<JSONData> getPSs(@Body LocationRequest locationRequest);

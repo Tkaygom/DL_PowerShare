@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.SET_ALARM" />
 
+
     <application
         android:theme="@style/AppTheme.NoActionBar"
         android:allowBackup="true"
@@ -45,6 +46,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBLOWVZMzg_gHG27IACWqgKLUdyyvc6HNA" />
 
+
+        <activity
+        android:name=".RegistrationActivity"
+        android:label="Create Account"/>
 
 
     </application>

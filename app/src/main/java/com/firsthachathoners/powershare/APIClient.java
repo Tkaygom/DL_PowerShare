@@ -1,5 +1,10 @@
 package com.firsthachathoners.powershare;
 
+
+
+
+import java.util.concurrent.TimeUnit;
+//import com.firsthachathoners.powershare.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -19,12 +24,7 @@ public class APIClient {
             // Create HTTP client with interceptor
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-            // Add logging interceptor (debug only)
-            if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                httpClient.addInterceptor(logging);
-            }
+
 
             // Add timeouts
             httpClient
@@ -40,4 +40,4 @@ public class APIClient {
         }
         return retrofit;
     }
-}}
+}
