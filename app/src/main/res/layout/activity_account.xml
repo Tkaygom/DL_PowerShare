@@ -19,24 +19,32 @@
             android:layout_height="wrap_content"
             android:text="Logout" />
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Account Information"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:paddingBottom="16dp"/>
-
-    <TextView
         android:id="@+id/text_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username: "
-        android:textSize="18sp"/>
+        android:text="Username: N/A" />
+
+    <TextView
+        android:id="@+id/text_full_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Full Name: N/A" />
+
+    <TextView
+        android:id="@+id/text_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: N/A" />
+
+    <TextView
+        android:id="@+id/text_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number: N/A" />
 
     <TextView
         android:id="@+id/text_credit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Credit Session: "
-        android:textSize="18sp"/>
+        android:text="Credit: N/A" />
 </LinearLayout>
