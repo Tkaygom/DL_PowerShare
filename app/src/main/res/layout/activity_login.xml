@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/white"
     tools:context="com.firsthachathoners.powershare.LoginActivity">
 
     <!-- Login progress -->
@@ -36,7 +37,11 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/logo"
-                android:layout_marginTop="40dp"/>
+                android:layout_marginTop="40dp"
+                android:gravity="center"/>
+
+
+
             <!-- Welcome Text -->
             <TextView
                 android:id="@+id/welcome_text"
@@ -46,7 +51,11 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp"
+                android:gravity="center"/>
+
+
+
             <!-- Sign-in prompt text -->
             <TextView
                 android:id="@+id/sign_in_text"
@@ -55,7 +64,8 @@
                 android:text="Sign in to continue your charge!"
                 android:textSize="14sp"
                 android:textColor="@color/gray"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="20dp"
+                android:gravity="center"/>
 
             <!-- username Input Field -->
 
@@ -108,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account? Sign Up"
-                android:textColor="@color/blue"
+                android:textColor="@color/black"
                 android:gravity="center"/>
 
         </LinearLayout>
