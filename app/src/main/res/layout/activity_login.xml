@@ -20,6 +20,43 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
+
+    <!-- Logo -->
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="40dp"
+        android:gravity="center"/>
+
+
+
+    <!-- Welcome Text -->
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Power Share"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
+        android:gravity="center"/>
+
+
+
+    <!-- Sign-in prompt text -->
+    <TextView
+        android:id="@+id/sign_in_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in to continue your charge!"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"/>
+
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -32,40 +69,6 @@
             android:orientation="vertical">
 
 
-            <!-- Logo -->
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/logo"
-                android:layout_marginTop="40dp"
-                android:gravity="center"/>
-
-
-
-            <!-- Welcome Text -->
-            <TextView
-                android:id="@+id/welcome_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome to Power Share"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginTop="16dp"
-                android:gravity="center"/>
-
-
-
-            <!-- Sign-in prompt text -->
-            <TextView
-                android:id="@+id/sign_in_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign in to continue your charge!"
-                android:textSize="14sp"
-                android:textColor="@color/gray"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"/>
 
             <!-- username Input Field -->
 
@@ -118,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account? Sign Up"
-                android:textColor="@color/black"
+                android:textColor="@color/blue"
                 android:gravity="center"/>
 
         </LinearLayout>
