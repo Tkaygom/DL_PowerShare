@@ -61,6 +61,7 @@
             android:layout_margin="16dp"
             android:backgroundTint="#FF0048"
             android:text="Scan a station"
+            android:background="@drawable/rounded_button"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
