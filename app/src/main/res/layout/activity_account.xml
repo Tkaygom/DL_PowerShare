@@ -2,10 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_horizontal"
-    android:background="@color/white">
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_horizontal"
+        android:background="@color/white">
+
+
+
 
     <!-- Profile Picture -->
 <!--    <ImageView-->
@@ -17,67 +24,236 @@
 <!--        android:layout_marginBottom="16dp"-->
 <!--        android:background="@drawable/circle_bg" />-->
 
+    <!-- Header -->
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Account"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:textColor="#000" />
+
+    <!-- Profile Picture (Centered) -->
+    <ImageView
+        android:id="@+id/ivProfilePicture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/profile_placeholder"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background" />
+
+
     <!-- User Info -->
+
+    <!-- Username in Bold (Centered) -->
     <TextView
         android:id="@+id/text_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username: N/A"
-        android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/text_full_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Full Name: N/A"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/text_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email: N/A"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/text_phone_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone Number: N/A"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp" />
-
-    <TextView
-        android:id="@+id/text_credit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Credit: N/A"
-        android:textSize="16sp"
-        android:textColor="@color/colorAccent"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Buttons -->
-    <Button
-        android:id="@+id/btn_back"
+    <!-- Info Box for Credit, Full Name, Phone, Email -->
+    <LinearLayout
+        android:id="@+id/infoBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back to Map"
-        android:backgroundTint="#FFD700"
-        android:background="@drawable/rounded_button"
-        android:textColor="@color/white"
-        android:layout_marginBottom="8dp" />
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/box_background">
 
-    <Button
-        android:id="@+id/btn_logout"
+        <!-- Credit -->
+        <TextView
+            android:id="@+id/tvCreditLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Credit"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#000" />
+
+
+        <TextView
+            android:id="@+id/text_credit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Credit: N/A"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Full Name Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvFullNameLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Full Name"
+                android:textSize="16sp"
+                android:textColor="#000" />
+            <TextView
+                android:id="@+id/text_full_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name: N/A"
+                android:textSize="16sp"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <!-- Phone Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+            <TextView
+                android:id="@+id/tvPhoneLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Phone"
+                android:textSize="16sp"
+                android:textColor="#000" />
+            <TextView
+                android:id="@+id/text_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number: N/A"
+                android:textSize="16sp"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <!-- Email Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+            <TextView
+                android:id="@+id/tvEmailLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Email"
+                android:textSize="16sp"
+                android:textColor="#000" />
+            <TextView
+                android:id="@+id/text_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name: N/A"
+                android:textSize="16sp"
+                android:textColor="#000" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- Invite Friends Box -->
+    <LinearLayout
+        android:id="@+id/inviteBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        android:backgroundTint="#FFD700"
-        android:background="@drawable/rounded_button"
-        android:textColor="@color/white" />
+        android:orientation="horizontal"
+        android:background="#FFEB3B"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tvInvite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Invite your friends to managing their finances and get $100 each."
+            android:textColor="#000"
+            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/ivInviteLogo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/invite_logo"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+
+
+
+
+    <!-- Row of Buttons: Payment Method, Feed Back, Settings -->
+    <LinearLayout
+        android:id="@+id/midButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
+        <Button
+            android:id="@+id/btnPaymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payment Method"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnFeedBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Feed Back"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+
+    <!-- Bottom Buttons: Back to Map and Logout -->
+    <LinearLayout
+        android:id="@+id/bottomButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp">
+        <Button
+            android:id="@+id/btnBackToMap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Back to Map"
+            android:backgroundTint="#FFD700"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/white"/>
+
+
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Logout"
+            android:textColor="@color/white" />
+
+
+
+
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
+
